@@ -26,6 +26,7 @@
 #else
 # include <dlfcn.h>
 #endif
+#include <cstdlib>
 
 static void init_vk();
 static const struct vk_init {
@@ -43,11 +44,11 @@ static vk_t vk;
 
 void init_vk()
 {
-    constexpr const auto vkdso =
+    const auto vkdso =
 #if (_WIN32+0)
         TEXT("vulkan-1.dll")
 #elif (__APPLE__+0)
-        "libvulkan.1.dylib"
+        std::getenv("VULKAN_LIB") ? std::getenv("VULKAN_LIB") : "libvulkan.1.dylib"
 #elif (__ANDROID__+0)
         "libvulkan.so"
 #else
